@@ -75,11 +75,12 @@ FROM movies;
 SELECT SUM((total_seats - available_seats) * price) AS tong_doanh_thu_tat_ca
 FROM movies;
 
--- 2.11. Tìm phim có số vé bán ra nhiều nhất
--- Kết hợp ORDER BY giảm dần và LIMIT 1 để lấy dòng cao nhất
+-- 2.11. Tìm phim có số vé bán ra nhiều nhất (Sử dụng MAX)
 SELECT 
     title, 
     (total_seats - available_seats) AS ve_da_ban
 FROM movies
-ORDER BY ve_da_ban DESC
-LIMIT 1;
+WHERE (total_seats - available_seats) = (
+    SELECT MAX(total_seats - available_seats) 
+    FROM movies
+);

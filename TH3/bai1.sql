@@ -1,15 +1,15 @@
 CREATE DATABASE IF NOT EXISTS shopping_cart;
 USE shopping_cart;
 
--- Tạo bảng cart_items 
+-- 1. Tạo bảng cart_items
 CREATE TABLE IF NOT EXISTS cart_items (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    price DECIMAL(12,2) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
     quantity INT NOT NULL
 );
 
--- Them san pham vao bang cart_items
+-- 2.1. Thêm ít nhất 5 sản phẩm vào bảng
 INSERT IGNORE INTO cart_items (name, price, quantity)
 VALUES
     ('Laptop ASUS Vivobook 16', 15990000.00, 1),
@@ -41,38 +41,43 @@ VALUES
     ('Nước rửa tay khô 500ml', 75000.00, 7),
     ('Kem chống nắng SPF50', 280000.00, 4);
     
--- Hien thi toan bo san pham 
+-- 2.2. Hiển thị toàn bộ sản phẩm 
 SELECT *
 FROM cart_items;
 
--- Hiển thị sản phẩm có số lượng lớn hơn 5 
+-- 2.3. Hiển thị sản phẩm có giá lớn hơn 100000
+SELECT * 
+FROM cart_items 
+WHERE price > 100000;
+
+-- 2.4. Hiển thị sản phẩm có số lượng lớn hơn 5 
 SELECT *
 FROM cart_items
 WHERE quantity > 5;
 
--- Sắp xếp sản phẩm theo giá giảm dần 
+-- 2.5. Sắp xếp sản phẩm theo giá giảm dần 
 SELECT *
 FROM cart_items
 ORDER BY price DESC; 
 
--- Cập nhật giá của một sản phẩm 
+-- 2.6. Cập nhật giá của một sản phẩm 
 UPDATE cart_items 
 SET price = 70560.00
 WHERE name = 'Áo hoodie unisex';
 
--- Cập nhật số lượng của một sản phẩm
+-- 2.7. Cập nhật số lượng của một sản phẩm
 UPDATE cart_items 
 SET quantity = 7
 WHERE name = 'Áo hoodie unisex';
 
--- Xóa một sản phẩm khỏi giỏ hàng
+-- 2.8. Xóa một sản phẩm khỏi giỏ hàng
 DELETE FROM cart_items 
 WHERE id = 25;
 
--- Hiển thị tên sản phẩm, giá, số lượng và thành tiền (price × quantity) 
+-- 2.9. Hiển thị tên sản phẩm, giá, số lượng và thành tiền (price × quantity) 
 SELECT name, price, quantity, price * quantity as thanh_tien
 FROM cart_items;
 
--- Tính tổng tiền của toàn bộ giỏ hàng 
+-- 2.10. Tính tổng tiền của toàn bộ giỏ hàng 
 SELECT SUM(price * quantity) as tong_tien 
 FROM cart_items;
