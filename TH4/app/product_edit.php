@@ -3,13 +3,19 @@ require_once 'model/product.php';
 $error = "";
 
 if (!isset($_GET['id'])) {
-    die("Không tìm thấy ID sản phẩm.");
+    include 'view/header.php';
+    echo "<h2 class='error'>Lỗi</h2><p>Không tìm thấy ID sản phẩm.</p><a href='product_list.php' class='btn'>Quay lại danh sách</a>";
+    include 'view/footer.php';
+    exit();
 }
 $id = $_GET['id'];
 $product = getProductById($id);
 
 if (!$product) {
-    die("Sản phẩm không tồn tại trong hệ thống.");
+    include 'view/header.php';
+    echo "<h2 class='error'>Lỗi</h2><p>Sản phẩm không tồn tại trong hệ thống.</p><a href='product_list.php' class='btn'>Quay lại danh sách</a>";
+    include 'view/footer.php';
+    exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
