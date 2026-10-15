@@ -7,13 +7,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
 
-    // Kiểm tra dữ liệu
-    if (empty($name)) {
+    // Sửa lỗi kiểm tra dữ liệu
+    if ($name === "") {
         $error = "Tên sản phẩm không được rỗng.";
     } elseif (!is_numeric($price) || $price <= 0) {
         $error = "Giá phải lớn hơn 0.";
-    } elseif (!is_numeric($quantity) || $quantity < 0) {
-        $error = "Số lượng phải lớn hơn hoặc bằng 0.";
+    } elseif (filter_var($quantity, FILTER_VALIDATE_INT) === false || $quantity < 0) {
+        // Lọc chuẩn xác số nguyên (integer), tránh trường hợp số thập phân như 1.5
+        $error = "Số lượng phải là số nguyên lớn hơn hoặc bằng 0.";
     } else {
         if (addProduct($name, $price, $quantity)) {
             header("Location: product_list.php");
