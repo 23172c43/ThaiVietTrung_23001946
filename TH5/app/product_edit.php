@@ -1,57 +1,83 @@
+
 <?php
 require_once 'common/auth_check.php';
 require_once 'common/csrf.php';
 require_once 'model/product.php';
-$error = "";
 
-if (!isset($_GET['id'])) {
-    include 'view/header.php';
-    echo "<h2 class='error'>Lỗi</h2><p>Không tìm thấy ID sản phẩm.</p><a href='product_list.php' class='btn'>Quay lại danh sách</a>";
-    include 'view/footer.php';
-    exit();
+$error = '';
+
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+if ($id === false || $id === null || $id <= 0) {
+    http_response_code(400);
+    exit('ID sản phẩm không hợp lệ.');
 }
-$id = $_GET['id'];
+
 $product = getProductById($id);
 
 if (!$product) {
-    include 'view/header.php';
-    echo "<h2 class='error'>Lỗi</h2><p>Sản phẩm không tồn tại trong hệ thống.</p><a href='product_list.php' class='btn'>Quay lại danh sách</a>";
-    include 'view/footer.php';
-    exit();
+    http_response_code(404);
+    exit('Sản phẩm không tồn tại.');
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verifyCsrf();
 
+    $rawName = $_POST['name'] ?? '';
+    $rawPrice = $_POST['price'] ?? '';
+    $rawQuantity = $_POST['quantity'] ?? '';
 
-    $name = trim($_POST['name']);
-    $price = $_POST['price'];
-    $quantity = $_POST['quantity'];
+    $name = is_string($rawName) ? trim($rawName) : '';
+    $price = is_string($rawPrice) ? $rawPrice : '';
+    $quantity = filter_var(
+        $rawQuantity,
+        FILTER_VALIDATE_INT
+    );
 
-    // Sửa lỗi kiểm tra dữ liệu tương tự như file add
-    if ($name === "") {
-        $error = "Tên sản phẩm không được rỗng.";
-    } elseif (mb_strlen($str, 'UTF-8') > 100){
-        $error = "Tên sản phẩm dài quá 100 ký tự.";
-    } elseif (!is_numeric($price) || $price <= 0) {
-        $error = "Giá phải lớn hơn 0.";
-    } elseif (filter_var($quantity, FILTER_VALIDATE_INT) === false || $quantity < 0) {
-        $error = "Số lượng phải là số nguyên lớn hơn hoặc bằng 0.";
+    if ($name === '') {
+        $error = 'Tên sản phẩm không được rỗng.';
+    } elseif (mb_strlen($name, 'UTF-8') > 100) {
+        $error = 'Tên sản phẩm dài quá 100 ký tự.';
+    } elseif (
+        !is_numeric($price) ||
+        !is_finite((float) $price) ||
+        (float) $price <= 0 ||
+        (float) $price > 99999999.99
+    ) {
+        $error = 'Giá không hợp lệ.';
+    } elseif (
+        $quantity === false ||
+        $quantity < 0 ||
+        $quantity > 2147483647
+    ) {
+        $error = 'Số lượng phải là số nguyên không âm hợp lệ.';
     } else {
-        if (updateProduct($id, $name, $price, $quantity)) {
-            header("Location: product_list.php");
+        if (updateProduct(
+            $id,
+            $name,
+            round((float) $price, 2),
+            $quantity
+        )) {
+            header('Location: product_list.php');
             exit();
-        } else {
-            $error = "Đã xảy ra lỗi khi cập nhật dữ liệu.";
         }
+
+        $error = 'Đã xảy ra lỗi khi cập nhật dữ liệu.';
     }
 }
 
 include 'view/header.php';
 ?>
+
 <h2>Sửa sản phẩm</h2>
-<?php if ($error) echo "<p class='error'>$error</p>"; ?>
-<form method="POST" action="">
+
+<?php if ($error): ?>
+    <p class="error">
+        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?>
+    </p>
+<?php endif; ?>
+
+<form method="POST">
     <input
         type="hidden"
         name="csrf_token"
@@ -60,17 +86,62 @@ include 'view/header.php';
 
     <p>
         <label>Tên sản phẩm:</label><br>
-        <input type="text" name="name" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : htmlspecialchars($product['name']); ?>">
+        <input
+            type="text"
+            name="name"
+            required
+            maxlength="100"
+            value="<?= htmlspecialchars(
+                is_string($_POST['name'] ?? null)
+                    ? $_POST['name']
+                    : $product['name'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>"
+        >
     </p>
+
     <p>
         <label>Giá:</label><br>
-        <input type="number" step="0.01" name="price" value="<?php echo isset($_POST['price']) ? htmlspecialchars($_POST['price']) : htmlspecialchars($product['price']); ?>">
+        <input
+            type="number"
+            name="price"
+            step="0.01"
+            min="0.01"
+            required
+            value="<?= htmlspecialchars(
+                is_string($_POST['price'] ?? null)
+                    ? $_POST['price']
+                    : (string) $product['price'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>"
+        >
     </p>
+
     <p>
         <label>Số lượng:</label><br>
-        <input type="number" name="quantity" value="<?php echo isset($_POST['quantity']) ? htmlspecialchars($_POST['quantity']) : htmlspecialchars($product['quantity']); ?>">
+        <input
+            type="number"
+            name="quantity"
+            min="0"
+            step="1"
+            required
+            value="<?= htmlspecialchars(
+                is_string($_POST['quantity'] ?? null)
+                    ? $_POST['quantity']
+                    : (string) $product['quantity'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>"
+        >
     </p>
-    <button type="submit" class="btn">Cập nhật</button>
+
+    <button type="submit" class="btn">
+        Cập nhật
+    </button>
+
     <a href="product_list.php" class="btn">Hủy</a>
 </form>
+
 <?php include 'view/footer.php'; ?>
