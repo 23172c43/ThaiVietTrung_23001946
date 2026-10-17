@@ -24,11 +24,7 @@ include 'view/header.php';
         <td><?php echo number_format($p['price'], 0, ',', '.'); ?> VNĐ</td>
         <td><?php echo $p['quantity']; ?></td>
         <td>
-            <form action="product_edit.php" method="POST" style="display:inline;">
-                <input type="hidden" name="id" value="<?php echo htmlspecialchars($p['id']); ?>">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <button type="submit" style="background:none;border:none;color:red;text-decoration:underline;cursor:pointer;">[Sửa]</button>
-            </form>
+            <a href="product_edit.php?id=<?php echo $p['id']; ?>">[Sửa]</a>
             <!-- Form ẩn để gọi xóa bằng POST kèm Token -->
             <form action="product_delete.php" method="POST" style="display:inline;" onsubmit="return confirm('Xóa sản phẩm này?');">
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($p['id']); ?>">

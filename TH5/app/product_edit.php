@@ -21,7 +21,7 @@ if (!$product) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    verifyCsrf()
+    verifyCsrf();
 
 
     $name = trim($_POST['name']);
