@@ -10,12 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 verifyCsrf();
 
+$id = filter_input(
+    INPUT_POST,
+    'id',
+    FILTER_VALIDATE_INT
+);
+
+if ($id === false || $id === null || $id <= 0) {
+    http_response_code(400);
+    exit('ID không hợp lệ.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // Kiểm tra tính hợp lệ của CSRF Token
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        die("Yêu cầu không hợp lệ (Lỗi bảo mật CSRF).");
-    }
 
     if (isset($_POST['id'])) {
         $id = $_POST['id'];

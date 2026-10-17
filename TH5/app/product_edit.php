@@ -1,4 +1,3 @@
-
 <?php
 require_once 'common/auth_check.php';
 require_once 'common/csrf.php';

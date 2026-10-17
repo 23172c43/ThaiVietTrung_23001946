@@ -5,7 +5,7 @@ require_once 'model/product.php';
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    verifyCsrf()
+    verifyCsrf();
 
     $name = trim($_POST['name']);
     $price = $_POST['price'];
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sửa lỗi kiểm tra dữ liệu
     if ($name === "") {
         $error = "Tên sản phẩm không được rỗng.";
-    } elseif (mb_strlen($str, 'UTF-8') > 100){
+    } elseif (mb_strlen($name, 'UTF-8') > 100){
         $error = "Tên sản phẩm dài quá 100 ký tự.";
     } elseif (!is_numeric($price) || $price <= 0) {
         $error = "Giá phải lớn hơn 0.";

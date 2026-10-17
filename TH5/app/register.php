@@ -1,9 +1,11 @@
 <?php
 require_once 'common/dbConnect.php';
+require_once 'common/csrf.php';
 $error = "";
 $success = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+    verifyCsrf();
     $username = trim((string) ($_POST['username'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
 
