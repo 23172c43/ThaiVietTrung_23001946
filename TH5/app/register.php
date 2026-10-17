@@ -42,6 +42,11 @@ include 'view/header.php';
 <?php if ($error) echo "<p class='error'>$error</p>"; ?>
 <?php if ($success) echo "<p class='success'>$success</p>"; ?>
 <form method="POST">
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') ?>"
+    >
     <p><label>Tên đăng nhập:</label><br><input type="text" name="username" required></p>
     <p><label>Mật khẩu:</label><br><input type="password" name="password" required></p>
     <button type="submit" class="btn">Đăng ký</button>
