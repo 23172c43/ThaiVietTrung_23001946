@@ -1,10 +1,19 @@
 <?php
 require_once 'common/auth_check.php';
 require_once 'model/product.php';
+require_once 'common/csrf.php';
 $products = getAllProducts();
 include 'view/header.php';
 ?>
+
 <h2>Danh sách sản phẩm</h2>
+
+<p>Xin chào, <?php echo htmlspecialchars($_SESSION['username']) ?>!</p>
+<form action="logout.php" method="POST" class="inline-form">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken()) ?>">
+    <button type="submit" class="btn">Đăng xuất</button>
+</form>
+
 <a href="product_add.php" class="btn">Thêm sản phẩm mới</a>
 <table>
     <tr><th>ID</th><th>Tên sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Chức năng</th></tr>

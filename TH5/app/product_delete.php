@@ -1,7 +1,7 @@
 <?php
-session_start(); // Bắt buộc phải có để kiểm tra CSRF token
+require_once 'common/auth_check.php';
 require_once 'model/product.php';
-
+session_start(); // Bắt buộc phải có để kiểm tra CSRF token
 // Chỉ xử lý khi request là POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
