@@ -1,9 +1,12 @@
 <?php
 require_once 'common/auth_check.php';
+require_once 'common/csrf.php';
 require_once 'model/product.php';
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    verifyCsrf()
+
     $name = trim($_POST['name']);
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
@@ -11,6 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sửa lỗi kiểm tra dữ liệu
     if ($name === "") {
         $error = "Tên sản phẩm không được rỗng.";
+    } elseif (mb_strlen($str, 'UTF-8') > 100){
+        $error = "Tên sản phẩm dài quá 100 ký tự.";
     } elseif (!is_numeric($price) || $price <= 0) {
         $error = "Giá phải lớn hơn 0.";
     } elseif (filter_var($quantity, FILTER_VALIDATE_INT) === false || $quantity < 0) {
@@ -31,6 +36,11 @@ include 'view/header.php';
 <h2>Thêm sản phẩm</h2>
 <?php if ($error) echo "<p class='error'>$error</p>"; ?>
 <form method="POST" action="">
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') ?>"
+    >
     <p>
         <label>Tên sản phẩm:</label><br>
         <input type="text" name="name" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">

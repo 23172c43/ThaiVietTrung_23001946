@@ -4,8 +4,8 @@ $error = "";
 $success = "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+    $username = trim((string) ($_POST['username'] ?? ''));
+    $password = (string) ($_POST['password'] ?? '');
 
     if($username === "" || $password === ""){
         $error = "Vui long nhap day du ten dang nhap va mat khau";

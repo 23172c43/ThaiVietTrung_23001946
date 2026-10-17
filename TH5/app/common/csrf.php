@@ -5,10 +5,20 @@ function csrfToken(): string {
     return $_SESSION['csrf_token'];
 }
 function verifyCsrf(): void {
-    if (session_status() === PHP_SESSION_NONE) session_start();
-    if (!isset($_POST['csrf_token']) || !is_string($_POST['csrf_token']) ||
-        !hash_equals(csrfToken(), $_POST['csrf_token'])) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $expected = $_SESSION['csrf_token'] ?? null;
+    $received = $_POST['csrf_token'] ?? null;
+
+    if (
+        !is_string($expected) ||
+        !is_string($received) ||
+        !hash_equals($expected, $received)
+    ) {
         http_response_code(403);
         exit('Yêu cầu không hợp lệ (CSRF).');
     }
 }
+?>

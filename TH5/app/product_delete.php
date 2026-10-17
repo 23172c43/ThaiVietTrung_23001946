@@ -1,8 +1,15 @@
 <?php
 require_once 'common/auth_check.php';
+require_once 'common/csrf.php';
 require_once 'model/product.php';
-session_start(); // Bắt buộc phải có để kiểm tra CSRF token
-// Chỉ xử lý khi request là POST
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit('Method not allowed');
+}
+
+verifyCsrf();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Kiểm tra tính hợp lệ của CSRF Token
