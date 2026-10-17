@@ -1,14 +1,11 @@
+
 <?php
-if(session_status() === PHP_SESSION_NONE){
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if(!isset($_SESSION['user_id'])){
-    header("Location: login.php");
+if (empty($_SESSION['user_id'])) {
+    header('Location: login.php');
     exit();
-}
-
-if(empty($_SESSION['csrf_token'])){
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 ?>
