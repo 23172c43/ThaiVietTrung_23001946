@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <title>Bài 1</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .gioi {color: green; font-weight: bold;}
+        .kha {color: blue;}
+        .tb {color: orange;}
+        .truot {color: red;}
+    </style>
+</html>
+
+<body>
+    <div id="app">
+        <button @click="hienThi = !hienThi">Bật/Tắt Giới thiệu</button>
+
+        <div v-show="hienThi" style="margin-top: 15px; border: 1px solid #ccc; padding: 10px;">
+            <img :src="anhDaiDien" alt="Avatar" width="100">
+            <p>Mã SV: {{maSV}}</p>
+            <p>Họ tên: {{hoTen}}</p>
+            <p>Lớp: <span v-text="lop"></span></p>
+            <p>Trạng thái: {{dangHoc ? 'Đang học' : 'Đã nghỉ'}}</p>
+            <p>
+                Điểm TB: {{diemTB}} - Xếp loại:
+                <span :class="classXepLoai">{{xepLoai}}</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    hienThi: true,
+                    maSV: 'SV001',
+                    hoTen: 'Nguyễn Văn A',
+                    lop: 'K69 Toán học',
+                    anhDaiDien: 'https://via.placeholder.com/150',
+                    diemTB: 7.5,
+                    dangHoc: true,
+                }
+            },
+
+            computed: {
+                xepLoai() {
+                    if (this.diemTB >= 8) return 'Giỏi';
+                    if (this.diemTB >= 6.5) return 'Khá';
+                    if (this.diemTB >= 5) return 'Trung bình';
+                    return 'Chưa đạt';
+                },
+
+                classXepLoai() {
+                    if (this.diemTB >= 8) return 'gioi';
+                    if (this.diemTB >= 6.5) return 'kha';
+                    if (this.diemTB >= 5) return 'tb';
+                    return 'truot';
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 2</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <form @submit.prevent="datVeThanhCong = true">
+            <div>
+                Ho ten: <input v-model.trim="hoTen" type="text" placeholder="Nhap ho ten">
+            </div>
+
+            <div style="margin-top: 10px;">
+                Suat chieu:
+                <select v-model="suatChieu">
+                    <option value="18:00">18:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="22:00">22:00</option>
+                </select>
+            </div>
+
+            <div style="margin-top: 10px;">
+                Loai ve:
+                <label><input type="radio" v-model="loaiVe" :value="70000"></label>
+                <label><input type="radio" v-model="loaiVe" :value="100000"> VIP</label>
+            </div>
+
+            <div style="margin-top: 10px">
+                So luong:
+                <button type="button" @click="giamVe" :disabled="soLuong <= 1">-</button>
+                <input type="number" v-model.number="soLuong" min="1" max="10" style="width: 50px; text-align: center;">
+                <button type="button" @click="tangVe" :disabled="soLuong >= 10">+</button>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <label><input type="checkbox" v-model="combo"> Combo bắp nước (+45.000đ)</label>
+            </div>
+
+            <h3 style="color: red;">Tổng tiền: {{ tongTien.toLocaleString('vi-VN') }} VNĐ</h3>
+            
+            <button type="submit" :disabled="!formHopLe">Đặt vé</button>
+            <button type="button" @click="datLaiForm">Đặt lại</button>
+        </form>
+
+        <div v-if="datVeThanhCong" style="margin-top: 15px; color: green; font-weight: bold;">
+            Khách hàng {{ hoTen }} đã đặt thành công {{ soLuong }} vé lúc {{ suatChieu }}!
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    hoTen: '',
+                    suatChieu: '20:00',
+                    loaiVe: 70000,
+                    soLuong: 1,
+                    combo: false,
+                    datVeThanhCong: false
+                }
+            },
+            computed: {
+                tongTien() {
+                    let tong = this.loaiVe * this.soLuong;
+                    if (this.combo) tong += 45000;
+                    return tong;
+                },
+                formHopLe() {
+                    return this.hoTen.length > 0 && this.soLuong >= 1 && this.soLuong <= 10;
+                }
+            },
+            methods: {
+                tangVe() {
+                    if (this.soLuong < 10) this.soLuong++;
+                },
+                giamVe() {
+                    if (this.soLuong > 1) this.soLuong--;
+                },
+                datLaiForm() {
+                    this.hoTen = '';
+                    this.suatChieu = '20:00';
+                    this.loaiVe = 70000;
+                    this.soLuong = 1;
+                    this.combo = false;
+                    this.datVeThanhCong = false;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

@@ -17,7 +17,7 @@ if (!is_numeric($score) || $score < 0 || $score > 10) {
     } else {
         $xepLoai = "Yếu";
     }
-
+    
     echo "Điểm: " . htmlspecialchars((string) $score, ENT_QUOTES, 'UTF-8') . "<br>";
     echo "Xếp loại: " . $xepLoai . "<br>";
 }

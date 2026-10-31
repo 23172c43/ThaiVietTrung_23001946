@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 3</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .hoan-thanh { text-decoration: line-through; color: gray; }
+        .danh-sach { margin-top: 15px; list-style: none; padding: 0; }
+        .danh-sach li { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <input v-model.trim="tenCongViecMoi" @keyup.enter="themCongViec" placeholder="Nhập công việc...">
+        <button @click="themCongViec">Thêm</button>
+        
+        <div style="margin-top: 15px;">
+            <button @click="kieuLoc = 'tatCa'">Tất cả</button>
+            <button @click="kieuLoc = 'chuaXong'">Chưa hoàn thành</button>
+            <button @click="kieuLoc = 'daXong'">Đã hoàn thành</button>
+        </div>
+
+        <p v-if="danhSachLoc.length === 0" style="color: red;">Không có công việc nào hiển thị!</p>
+        
+        <ul class="danh-sach">
+            <li v-for="cv in danhSachLoc" :key="cv.id">
+                <input type="checkbox" v-model="cv.trangThai">
+                <span :class="{ 'hoan-thanh': cv.trangThai }">{{ cv.ten }}</span>
+                <button @click="xoaCongViec(cv.id)" style="margin-left: 10px;">Xóa</button>
+            </li>
+        </ul>
+
+        <div style="margin-top: 15px; font-weight: bold;">
+            <p>Tổng số việc: {{ congViec.length }} | Việc chưa xong: {{ soViecChuaXong }}</p>
+            <button @click="xoaViecDaXong">Xóa các việc đã hoàn thành</button>
+        </div>
+    </div>
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    congViec: [],
+                    tenCongViecMoi: '',
+                    kieuLoc: 'tatCa',
+                    idKeTiep: 1
+                }
+            },
+            computed: {
+                danhSachLoc() {
+                    if (this.kieuLoc === 'chuaXong') {
+                        return this.congViec.filter(cv => !cv.trangThai);
+                    } else if (this.kieuLoc === 'daXong') {
+                        return this.congViec.filter(cv => cv.trangThai);
+                    }
+                    return this.congViec;
+                },
+                soViecChuaXong() {
+                    return this.congViec.filter(cv => !cv.trangThai).length;
+                }
+            },
+            methods: {
+                themCongViec() {
+                    if (this.tenCongViecMoi.length > 0) {
+                        this.congViec.push({
+                            id: this.idKeTiep++,
+                            ten: this.tenCongViecMoi,
+                            trangThai: false
+                        });
+                        this.tenCongViecMoi = '';
+                    }
+                },
+                xoaCongViec(id) {
+                    this.congViec = this.congViec.filter(cv => cv.id !== id);
+                },
+                xoaViecDaXong() {
+                    this.congViec = this.congViec.filter(cv => !cv.trangThai);
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
