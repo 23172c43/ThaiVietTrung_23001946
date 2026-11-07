@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài 3 - Giỏ hàng với props và emit | Vue 3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="container" v-cloak>
+    <header>
+      <div class="topline">Thực hành Vue 3 · Bài 3</div>
+      <h1>Giỏ hàng với props và $emit</h1>
+      <p class="subtle">Cha giữ dữ liệu. Con chỉ phát yêu cầu thay đổi, không sửa props.</p>
+    </header>
+
+    <section class="panel">
+      <div class="cart-row cart-head" v-if="gioHang.length">
+        <span>Sản phẩm</span><span>Đơn giá</span><span>Số lượng</span><span>Thành tiền</span><span>Thao tác</span>
+      </div>
+
+      <!-- Event có tên kebab-case khớp với emits của component con. -->
+      <dong-gio-hang
+        v-for="sanPham in gioHang"
+        :key="sanPham.id"
+        :san-pham="sanPham"
+        @doi-so-luong="doiSoLuong"
+        @yeu-cau-xoa="xoaSanPham"
+      ></dong-gio-hang>
+
+      <div v-if="gioHang.length === 0" class="empty">Giỏ hàng trống</div>
+
+      <div class="stats">
+        <div class="stat">Tổng số lượng<strong>{{ tongSoLuong }}</strong></div>
+        <div class="stat">Tổng tiền<strong>{{ dinhDangTien(tongTien) }}</strong></div>
+      </div>
+      <p v-if="thongBao" class="alert warning" role="alert">{{ thongBao }}</p>
+      <p style="margin-top: 16px"><button type="button" class="ghost" @click="khoiPhucViDu">Khôi phục giỏ ví dụ</button></p>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="components/DongGioHang.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

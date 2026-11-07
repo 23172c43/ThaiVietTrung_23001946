@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài 2 - Component thẻ sản phẩm | Vue 3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="container" v-cloak>
+    <header>
+      <div class="topline">Thực hành Vue 3 · Bài 2</div>
+      <h1>Danh mục sản phẩm bằng component</h1>
+      <p class="subtle">Component cha giữ danh sách. Mỗi thẻ tự quản lý nút xem mô tả.</p>
+    </header>
+    <p v-if="thongBao" class="alert success" role="status">{{ thongBao }}</p>
+
+    <div class="product-grid">
+      <!-- :ten, :gia... là v-bind: truyền props từ CHA xuống CON. -->
+      <!-- @mua nhận sự kiện từ component con, không phải yêu cầu bắt buộc của Bài 2. -->
+      <the-san-pham
+        v-for="sanPham in sanPhams"
+        :key="sanPham.id"
+        :ten="sanPham.ten"
+        :gia="sanPham.gia"
+        :anh="sanPham.anh"
+        :mo-ta="sanPham.moTa"
+        :so-luong-ton="sanPham.soLuongTon"
+        @mua="baoMua"
+      ></the-san-pham>
+    </div>
+  </div>
+
+  <!-- BẮT BUỘC: Vue -> file định nghĩa component -> file app để đăng ký, rồi mount -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="components/TheSanPham.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

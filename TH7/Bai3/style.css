@@ -1,0 +1,60 @@
+:root {
+  font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  color: #14243a; background: #f3f6fb;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 32px 16px; }
+[v-cloak] { display: none; }
+.container { width: min(1080px, 100%); margin: 0 auto; }
+header { margin-bottom: 24px; }
+h1 { margin: 5px 0 8px; font-size: clamp(1.5rem, 3vw, 2.2rem); }
+h2 { font-size: 1.14rem; margin: 0 0 15px; }
+p { line-height: 1.55; }
+.subtle { color: #53627a; margin: 5px 0; }
+.topline { color: #365cd7; font-weight: 700; letter-spacing: 0.08em; font-size: .77rem; text-transform: uppercase; }
+.panel { background: #fff; border: 1px solid #dce5f1; border-radius: 14px; padding: 20px; margin: 16px 0; box-shadow: 0 3px 15px #172c5010; }
+.toolbar, .form-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.form-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+label { display: flex; flex-direction: column; gap: 7px; font-size: .86rem; font-weight: 650; }
+input, select { min-width: 0; width: 100%; background: #fff; border: 1px solid #c4d0e0; border-radius: 9px; padding: 11px; font: inherit; color: inherit; }
+input:focus, select:focus, button:focus-visible { outline: 2px solid #597cf1; outline-offset: 2px; }
+button { cursor: pointer; border-radius: 9px; border: 0; padding: 10px 15px; font: inherit; font-weight: 650; background: #285bce; color: white; }
+button:hover:not(:disabled) { filter: brightness(.92); }
+button:disabled { opacity: .48; cursor: not-allowed; }
+button.ghost { background: #e8eefc; color: #1d4cb5; }
+button.danger { background: #ffe8eb; color: #af2442; }
+.btn-small { padding: 6px 11px; font-size: .84rem; }
+.actions { display: flex; align-items: end; gap: 10px; }
+.actions button { width: 100%; }
+.alert { padding: 11px 13px; border-radius: 9px; margin: 12px 0 0; font-size: .91rem; }
+.alert.warning { background: #fff4d9; color: #7a5300; }
+.alert.error { background: #ffecee; color: #9a1c38; }
+.alert.success { background: #e6f7ed; color: #17683c; }
+.badge { display: inline-block; border-radius: 100px; padding: 4px 9px; font-size: .8rem; font-weight: 700; }
+.badge.ok { color: #11683f; background: #dff7e9; }
+.badge.out { color: #b5314a; background: #ffe6eb; }
+.stats { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0 0; }
+.stat { flex: 1; min-width: 190px; background: #f0f5ff; border-radius: 10px; padding: 13px 16px; }
+.stat strong { display: block; font-size: 1.35rem; color: #214db7; margin-top: 5px; }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 12px; border-bottom: 1px solid #e4eaf3; text-align: left; white-space: nowrap; }
+th { color: #465a75; background: #f7f9fc; font-size: .83rem; }
+.empty { padding: 32px 12px; text-align: center; color: #68778f; }
+.product-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+.product-card { display: flex; flex-direction: column; overflow: hidden; background: white; border: 1px solid #dae4ef; border-radius: 14px; }
+.product-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: #ecf0f8; }
+.product-body { padding: 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; flex: 1; }
+.product-body h3 { margin: 0; font-size: 1.05rem; }
+.product-body .price { margin: 0; color: #214db7; font-weight: 800; }
+.product-body .desc { margin: 0; color: #495b74; font-size: .91rem; }
+.product-actions { display: flex; gap: 8px; margin-top: auto; flex-wrap: wrap; }
+.cart-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr 1fr auto; gap: 16px; align-items: center; padding: 15px 4px; border-bottom: 1px solid #e4eaf3; }
+.cart-head { color: #52627c; font-weight: 700; font-size: .85rem; }
+.cart-title { font-weight: 750; }
+.quantity { display: flex; align-items: center; gap: 10px; }
+.quantity strong { min-width: 2ch; text-align: center; }
+.quantity button { width: 32px; height: 32px; padding: 0; }
+.right { text-align: right; }
+@media (max-width: 850px) { .product-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .cart-head { display: none; } .cart-row { grid-template-columns: repeat(2,minmax(0,1fr)); } .right { text-align: left; } }
+@media (max-width: 580px) { .toolbar, .form-grid, .product-grid { grid-template-columns: 1fr; } .panel { padding: 15px; } .cart-row { gap: 10px; } }

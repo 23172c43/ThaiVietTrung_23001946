@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài 1 - Quản lý sản phẩm | Vue 3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="container" v-cloak>
+    <header>
+      <div class="topline">Thực hành Vue 3 · Bài 1</div>
+      <h1>Danh sách sản phẩm có tìm kiếm và thống kê</h1>
+      <p class="subtle">Trạng thái: <strong>{{ trangThai }}</strong></p>
+    </header>
+
+    <!-- v-model để đồng bộ ô nhập với data() -->
+    <section class="panel">
+      <h2>1. Tìm kiếm, lọc và sắp xếp</h2>
+      <div class="toolbar">
+        <label>Tên sản phẩm
+          <input v-model="tuKhoa" type="search" placeholder="Nhập tên để tìm...">
+        </label>
+        <label>Danh mục
+          <select v-model="danhMucChon">
+            <option value="">Tất cả danh mục</option>
+            <option v-for="danhMuc in danhMucCoSan" :key="danhMuc" :value="danhMuc">{{ danhMuc }}</option>
+          </select>
+        </label>
+        <label>Sắp xếp giá
+          <select v-model="kieuSapXep">
+            <option value="mac-dinh">Theo thứ tự gốc</option>
+            <option value="tang">Giá tăng dần</option>
+            <option value="giam">Giá giảm dần</option>
+          </select>
+        </label>
+      </div>
+      <!-- watch cập nhật canhBao khi tuKhoa thay đổi -->
+      <p v-if="canhBao" class="alert warning">{{ canhBao }}</p>
+      <div class="stats">
+        <div class="stat">Số sản phẩm đang hiển thị<strong>{{ soLuongHienThi }} / {{ sanPhams.length }}</strong></div>
+        <div class="stat">Giá trị tồn kho (đang hiển thị)<strong>{{ dinhDangTien(tongGiaTriTonKho) }}</strong></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>2. Bảng sản phẩm</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Tên</th><th>Danh mục</th><th>Giá</th><th>SL tồn</th><th>Trạng thái</th><th>Thao tác</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="sanPham in sanPhamHienThi" :key="sanPham.id">
+              <td>{{ sanPham.id }}</td>
+              <td>{{ sanPham.ten }}</td>
+              <td>{{ sanPham.danhMuc }}</td>
+              <td>{{ dinhDangTien(sanPham.gia) }}</td>
+              <td>{{ sanPham.tonKho }}</td>
+              <td><span class="badge" :class="sanPham.tonKho > 0 ? 'ok' : 'out'">{{ sanPham.tonKho > 0 ? 'Còn hàng' : 'Hết hàng' }}</span></td>
+              <td><button type="button" class="danger btn-small" @click="xoaSanPham(sanPham.id)">Xóa</button></td>
+            </tr>
+            <tr v-if="sanPhamHienThi.length === 0">
+              <td colspan="7" class="empty">Không có sản phẩm phù hợp với bộ lọc.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>3. Thêm sản phẩm</h2>
+      <form class="form-grid" @submit.prevent="themSanPham">
+        <label>Tên
+          <input v-model="form.ten" type="text" placeholder="VD: Chuột máy tính">
+        </label>
+        <label>Giá (VNĐ)
+          <input v-model.number="form.gia" type="number" step="1" placeholder="VD: 150000">
+        </label>
+        <label>Danh mục
+          <select v-model="form.danhMuc">
+            <option v-for="danhMuc in danhMucCoSan" :key="danhMuc" :value="danhMuc">{{ danhMuc }}</option>
+          </select>
+        </label>
+        <label>Tồn kho
+          <input v-model.number="form.tonKho" type="number" step="1" placeholder="VD: 5">
+        </label>
+        <div class="actions"><button type="submit">Thêm sản phẩm</button></div>
+      </form>
+      <p v-if="thongBaoForm" class="alert" :class="loaiThongBao">{{ thongBaoForm }}</p>
+    </section>
+  </div>
+  <!-- Thứ tự nạp: thư viện Vue -> mã của bài -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
