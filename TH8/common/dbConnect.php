@@ -1,24 +1,19 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+// File này chỉ tạo kết nối PDO. Phần xử lý lỗi và trả JSON nằm trong api/products.php.
 
-// Thông tin kết nối MySQL
 $host = 'localhost';
-$db   = 'vuejs_api_db';
-$user = 'root';
-$pass = '';
+$dbname = 'vuejs_api_db';
+$username = 'root';
+$password = ''; // Thay đổi nếu MySQL trên máy bạn có mật khẩu.
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$dsn = "mysql:host={$host};dbname={$dbname};charset={$charset}";
+
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES   => false,
+    PDO::ATTR_STRINGIFY_FETCHES  => false,
 ];
 
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Lỗi kết nối cơ sở dữ liệu.']);
-    exit;
-}
-?>
+$pdo = new PDO($dsn, $username, $password, $options);
